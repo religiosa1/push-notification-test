@@ -1,4 +1,7 @@
-import { getSubscriptions } from "../repositories/subscriptions";
+import {
+  PushSubscriptionDbModel,
+  getSubscriptions,
+} from "../repositories/subscriptions";
 import webPush from "./webPush";
 
 export async function sendNotifications(
@@ -12,11 +15,28 @@ export async function sendNotifications(
   console.log("Sending notification", payload, options);
 
   const subscriptions = await getSubscriptions();
-  for (const sub of subscriptions) {
-    webPush.sendNotification(
-      sub.subscription as webPush.PushSubscription,
-      payload,
-      options
-    );
-  }
+  await Promise.all(
+    subscriptions.map((sub) =>
+      webPush
+        .sendNotification(dbSubToWebPush(sub), payload, options)
+        .catch((err) => {
+          console.warn(
+            `error while sending the subscription id = ${sub.id}`,
+            err
+          );
+        })
+    )
+  );
+}
+
+function dbSubToWebPush(
+  sub: PushSubscriptionDbModel
+): webPush.PushSubscription {
+  return {
+    endpoint: sub.endpoint,
+    keys: {
+      p256dh: sub.p256dh,
+      auth: sub.auth,
+    },
+  };
 }

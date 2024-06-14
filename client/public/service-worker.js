@@ -6,7 +6,7 @@ self.addEventListener("push", function (event) {
   const notificationPromise = self.registration.showNotification(
     "Test notification",
     {
-      body: "body of the test notification",
+      body: data ?? "Empty body",
     }
   );
   // Keep the service worker alive until the notification is created.

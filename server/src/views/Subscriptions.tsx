@@ -1,13 +1,19 @@
 import { FC } from "hono/jsx";
 import { Layout } from "./Layout";
-import { SubscriptionDbModel } from "../repositories/subscriptions";
+import { PushSubscriptionDbModel } from "../repositories/subscriptions";
 import { css } from "hono/css";
+import { MaxWidthPreview } from "./MaxWidthPreview";
+import { format } from "date-fns/format";
 
 interface SubscriptionsProps {
-  subscriptions: SubscriptionDbModel[];
+  subscriptions: PushSubscriptionDbModel[];
 }
 export const Subscriptions: FC<SubscriptionsProps> = (props) => {
   const classes = {
+    tableResponsive: css`
+      overflow-x: auto;
+      width: 100%;
+    `,
     table: css`
       border-collapse: collapse;
       width: 100%;
@@ -18,47 +24,72 @@ export const Subscriptions: FC<SubscriptionsProps> = (props) => {
         padding: 5px;
       }
     `,
+    emptyCell: css`
+      text-align: center;
+    `,
   };
   return (
     <Layout title="Subscriptions">
-      <table class={classes.table}>
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>data</th>
-            <th>createdAt</th>
-            <th>delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.subscriptions?.length ? (
-            props.subscriptions.map((i) => (
+      <div className={classes.tableResponsive}>
+        <table class={classes.table}>
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>endpoint</th>
+              <th>keys</th>
+              <th>expirationTime</th>
+              <th>createdAt</th>
+              <th>modifiedAt</th>
+              <th>delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.subscriptions?.length ? (
+              props.subscriptions.map((i) => (
+                <tr>
+                  <td>{i.id}</td>
+                  <td>
+                    <MaxWidthPreview>{i.endpoint}</MaxWidthPreview>
+                  </td>
+                  <td>
+                    <details>
+                      <summary>keys</summary>
+                      <dl>
+                        <dt>p256dh</dt>
+                        <dd>{i.p256dh}</dd>
+                        <dt>auth</dt>
+                        <dd>{i.auth}</dd>
+                      </dl>
+                    </details>
+                  </td>
+                  <td>{formatDateTime(i.expirationTime)}</td>
+                  <td>{formatDateTime(i.createdAt)}</td>
+                  <td>{formatDateTime(i.modifiedAt)}</td>
+                  <td>
+                    <form method="POST">
+                      <input type="hidden" name="id" value={i.id} />
+                      <button>Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td>{i.id}</td>
-                <td>
-                  <details>
-                    <summary>{i.subscription.endpoint}</summary>
-                    <code>
-                      <pre>{JSON.stringify(i.subscription, undefined, 2)}</pre>
-                    </code>
-                  </details>
-                </td>
-                <td>{i.createdAt}</td>
-                <td>
-                  <form method="POST">
-                    <input type="hidden" name="id" value={i.id} />
-                    <button>Delete</button>
-                  </form>
+                <td colSpan={7} class={classes.emptyCell}>
+                  No data
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={3}>No data</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </Layout>
   );
 };
+
+function formatDateTime(date: Date | null | undefined): string {
+  if (date == null) {
+    return "";
+  }
+  return format(date, "yyyy-MM-dd HH:mm:ss");
+}
