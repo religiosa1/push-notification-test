@@ -2,7 +2,7 @@ import z from "zod";
 
 export const pushSubscriptionJSONSchema = z.object({
   endpoint: z.string().url(),
-  expirationTime: z.number().int().min(0).nullable(),
+  expirationTime: z.number().int().min(0).nullable().optional(),
   /**
    * It should be of the following shape
    * {

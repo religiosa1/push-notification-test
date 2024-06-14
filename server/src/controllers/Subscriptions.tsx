@@ -4,9 +4,8 @@ import { getSubscriptions } from "../repositories/subscriptions";
 import { Subscriptions } from "../views/Subscriptions";
 
 const router = new Hono();
-router.use("*", authenticate);
 
-router.get("/", async (c) => {
+router.get("/", authenticate, async (c) => {
   const subscriptions = await getSubscriptions();
   return c.render(<Subscriptions subscriptions={subscriptions} />);
 });
