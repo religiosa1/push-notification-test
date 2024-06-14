@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts",
     "generate-vapid-keys": "web-push generate-vapid-keys",
     "db:make-migration": "drizzle-kit generate --config ./src/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config ./src/drizzle.config.ts"
@@ -20,6 +21,8 @@
     "@types/better-sqlite3": "^7.6.10",
     "@types/node": "^20.11.17",
     "@types/web-push": "^3.6.3",
-    "tsx": "^4.7.1"
+    "tsup": "^8.1.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.5"
   }
 }

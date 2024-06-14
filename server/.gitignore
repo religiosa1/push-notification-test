@@ -1,3 +1,6 @@
+# prod build
+dist
+
 # db
 *.db
 
