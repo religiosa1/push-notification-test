@@ -1,7 +1,7 @@
 import { getVapidPublicKey, sendSubscriptionToServer } from "./api";
 import "./style.css";
 
-navigator.serviceWorker.register("./service-worker/service-worker.js");
+navigator.serviceWorker.register("/service-worker.js");
 
 navigator.serviceWorker.ready.then(async (registration) => {
   let subscription = await registration.pushManager.getSubscription();

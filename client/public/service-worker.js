@@ -1,9 +1,9 @@
-const s = self as ServiceWorkerGlobalScope & typeof globalThis;
+console.log("hello from service worker");
 
-s.addEventListener("push", function (event) {
+self.addEventListener("push", function (event) {
   const data = event.data?.json();
   console.log(data);
-  const notificationPromise = s.registration.showNotification(
+  const notificationPromise = self.registration.showNotification(
     "ServiceWorker Cookbook",
     {
       body: "Alea iacta est",

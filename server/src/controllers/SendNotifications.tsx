@@ -8,11 +8,7 @@ import { sendNotifications } from "../services/sendNotificationService";
 import { SendNotificationForm } from "../views/SendNotificationForm";
 
 const router = new Hono();
-router.use(
-  csrf({
-    origin: process.env.PUBLIC_URL && new URL(process.env.PUBLIC_URL).hostname,
-  })
-);
+// router.use(csrf());
 
 const sendNotificationSchema = z.object({
   message: z.string(),
