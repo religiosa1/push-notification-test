@@ -12,6 +12,7 @@ const registerSchema = z.object({
   subscription: pushSubscriptionJSONSchema,
 });
 
+router.options("/", clientCors);
 router.post(
   "/",
   clientCors,

@@ -1,12 +1,12 @@
 console.log("hello from service worker");
 
 self.addEventListener("push", function (event) {
-  const data = event.data?.json();
+  const data = event.data?.text();
   console.log(data);
   const notificationPromise = self.registration.showNotification(
-    "ServiceWorker Cookbook",
+    "Test notification",
     {
-      body: "Alea iacta est",
+      body: "body of the test notification",
     }
   );
   // Keep the service worker alive until the notification is created.

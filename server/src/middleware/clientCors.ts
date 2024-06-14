@@ -7,7 +7,7 @@ export const clientCors = createMiddleware(async (c, next) => {
   }
   const mw = cors({
     origin: process.env.CLIENT_URL,
-    allowMethods: ["POST", "GET"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
   });
   return mw(c, next);
 });

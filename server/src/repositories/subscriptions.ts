@@ -34,6 +34,6 @@ export async function saveSubscription(
   return Number(result.lastInsertRowid);
 }
 
-export async function removeSubscription(id: number): Promise<void> {
+export async function deleteSubscription(id: number): Promise<void> {
   await db.delete(schema.subscriptions).where(eq(schema.subscriptions.id, id));
 }

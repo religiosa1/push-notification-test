@@ -27,6 +27,7 @@ export const Subscriptions: FC<SubscriptionsProps> = (props) => {
             <th>id</th>
             <th>data</th>
             <th>createdAt</th>
+            <th>delete</th>
           </tr>
         </thead>
         <tbody>
@@ -43,6 +44,12 @@ export const Subscriptions: FC<SubscriptionsProps> = (props) => {
                   </details>
                 </td>
                 <td>{i.createdAt}</td>
+                <td>
+                  <form method="POST">
+                    <input type="hidden" name="id" value={i.id} />
+                    <button>Delete</button>
+                  </form>
+                </td>
               </tr>
             ))
           ) : (
