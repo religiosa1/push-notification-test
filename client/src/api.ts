@@ -1,7 +1,9 @@
 import { urlBase64ToUint8Array } from "./utils/urlBase64ToUint8Array";
 
+const baseUrl = import.meta.env.VITE_SERVER_URL;
+
 export async function getVapidPublicKey(): Promise<Uint8Array> {
-  const vapidPublicKey = await fetch("./vapidPublicKey")
+  const vapidPublicKey = await fetch(new URL("/vapidPublicKey", baseUrl))
     .then(checkResponseStatus)
     .then((r) => r.text());
 
@@ -12,7 +14,7 @@ export async function getVapidPublicKey(): Promise<Uint8Array> {
 export async function sendSubscriptionToServer(
   subscription: PushSubscription
 ): Promise<void> {
-  fetch("./register", {
+  fetch(new URL("/register", baseUrl), {
     method: "post",
     headers: {
       "Content-type": "application/json",

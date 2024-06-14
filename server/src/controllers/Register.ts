@@ -4,6 +4,7 @@ import z from "zod";
 import { saveSubscription } from "../repositories/subscriptions";
 import { pushSubscriptionJSONSchema } from "../models/pushSubscriptionJSONSchema";
 import { validator } from "hono/validator";
+import { clientCors } from "../middleware/clientCors";
 
 const router = new Hono();
 
@@ -13,6 +14,7 @@ const registerSchema = z.object({
 
 router.post(
   "/",
+  clientCors,
   validator("json", (value, c) => {
     console.log("Register subscription request", value);
     const parsed = registerSchema.safeParse(value);
