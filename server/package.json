@@ -1,0 +1,25 @@
+{
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "generate-vapid-keys": "web-push generate-vapid-keys",
+    "db:make-migration": "drizzle-kit generate --config ./src/drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config ./src/drizzle.config.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.11.3",
+    "@hono/zod-validator": "^0.2.2",
+    "better-sqlite3": "^11.0.0",
+    "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.22.7",
+    "drizzle-orm": "^0.31.2",
+    "hono": "^4.4.6",
+    "web-push": "^3.6.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/node": "^20.11.17",
+    "@types/web-push": "^3.6.3",
+    "tsx": "^4.7.1"
+  }
+}
