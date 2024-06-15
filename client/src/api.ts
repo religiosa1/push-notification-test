@@ -1,6 +1,6 @@
 import { urlBase64ToUint8Array } from "./utils/urlBase64ToUint8Array";
 
-const baseUrl = import.meta.env.VITE_SERVER_URL;
+const baseUrl = import.meta.env.VITE_SERVER_URL ?? window.location.href;
 
 export async function getVapidPublicKey(): Promise<Uint8Array> {
 	const vapidPublicKey = await fetch(new URL("/vapidPublicKey", baseUrl))
