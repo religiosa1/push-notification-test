@@ -19,7 +19,8 @@ export const subscribe = (
 		}
 
 		try {
-			sendSubscriptionToServer(subscription);
+			await sendSubscriptionToServer(subscription);
+			return subscription;
 		} catch (e) {
 			await subscription.unsubscribe();
 			throw e;

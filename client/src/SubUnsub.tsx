@@ -6,6 +6,7 @@ import { subscribe, unsubscribe } from "./notifications";
 interface SubUnsubProps {
 	registration: ServiceWorkerRegistration;
 	subscription: PushSubscription | null;
+	onSubscripionChange: (sub: PushSubscription | null) => void;
 }
 export function SubUnsub(props: SubUnsubProps) {
 	const [op, setOp] = useAsyncOperation();
@@ -51,7 +52,12 @@ export function SubUnsub(props: SubUnsubProps) {
 					<button
 						disabled={op().state === "pending"}
 						type="button"
-						onClick={() => setOp(unsubscribe(props.subscription))}
+						onClick={() =>
+							setOp(async () => {
+								await unsubscribe(props.subscription);
+								props.onSubscripionChange(null);
+							})
+						}
 					>
 						Click here to unsubscribe
 					</button>
@@ -61,7 +67,13 @@ export function SubUnsub(props: SubUnsubProps) {
 						disabled={op().state === "pending"}
 						type="button"
 						onClick={() =>
-							setOp(subscribe(props.registration, props.subscription))
+							setOp(async () => {
+								const sub = await subscribe(
+									props.registration,
+									props.subscription,
+								);
+								props.onSubscripionChange(sub);
+							})
 						}
 					>
 						Click here to subscribe to notifications
