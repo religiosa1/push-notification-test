@@ -16,7 +16,7 @@ export function SubUnsub(props: SubUnsubProps) {
 		<>
 			<div class="loader">
 				<Show
-					when={!hasNotificationPermission}
+					when={!hasNotificationPermission()}
 					fallback={"You gave this app permissions for notifications"}
 				>
 					This app doesn't have your permission for notification.
