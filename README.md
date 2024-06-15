@@ -28,12 +28,13 @@ Push Server is supplied by your browser/OS.
 
 ## Client
 
-Client is a laconic web app, which registers a service worker and gets a
+Client is a minimalistic web app, which registers a service worker and gets a
 push permission and push subscription and registers this subscription on the
 backend.
 
 ServiceWorker is waiting for the push event from the server (via Push Server
-supplied by the browser in the subscription), and just displays the payload text.
+supplied by the browser in the subscription), and just shows the notification
+with the payload text.
 
 ## Application Server
 

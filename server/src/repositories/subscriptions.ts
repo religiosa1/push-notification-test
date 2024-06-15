@@ -46,6 +46,18 @@ export async function saveSubscription(
   return Number(result.lastInsertRowid);
 }
 
-export async function deleteSubscription(id: number): Promise<void> {
-  await db.delete(schema.subscriptions).where(eq(schema.subscriptions.id, id));
+export async function deleteSubscriptionById(id: number): Promise<number> {
+  const result = await db
+    .delete(schema.subscriptions)
+    .where(eq(schema.subscriptions.id, id));
+  return Number(result.lastInsertRowid);
+}
+
+export async function deleteSubscription(sub: {
+  endpoint: string;
+}): Promise<number> {
+  const result = await db
+    .delete(schema.subscriptions)
+    .where(eq(schema.subscriptions.endpoint, sub.endpoint));
+  return Number(result.lastInsertRowid);
 }

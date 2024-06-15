@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { authenticate } from "../middleware/authenticate";
 import {
-  deleteSubscription,
+  deleteSubscriptionById,
   getSubscriptions,
 } from "../repositories/subscriptions";
 import { Subscriptions } from "../views/Subscriptions";
@@ -20,7 +20,7 @@ const deleteSchema = z.object({
 });
 router.post("/", authenticate, zValidator("form", deleteSchema), async (c) => {
   const { id } = c.req.valid("form");
-  await deleteSubscription(id);
+  await deleteSubscriptionById(id);
   const subscriptions = await getSubscriptions();
   return c.render(<Subscriptions subscriptions={subscriptions} />);
 });
