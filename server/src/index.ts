@@ -13,7 +13,7 @@ const app = new Hono();
 app.route("/", SendNotificationsController);
 app.route("/subscriptions", SubscriptionsController);
 app.route("/register", RegisterController);
-app.route("/register", UnregisterController);
+app.route("/unregister", UnregisterController);
 app.route("/vapidPublicKey", VapidPublicKeyController);
 
 console.log("Running migrations...");

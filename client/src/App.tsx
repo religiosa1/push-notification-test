@@ -9,18 +9,20 @@ export function App() {
 
 	return (
 		<>
-			<Switch>
-				<Match when={op().state === "pending"}>Processing...</Match>
-				<Match when={op().state === "rejected"}>
-					Error during handling of the operation:
-					<code>
-						<pre>{String(op().error)}</pre>
-					</code>
-				</Match>
-			</Switch>
+			<div class="loader">
+				<Switch>
+					<Match when={op().state === "pending"}>Processing...</Match>
+					<Match when={op().state === "rejected"}>
+						Error during handling of the operation:
+						<code>
+							<pre>{String(op().error)}</pre>
+						</code>
+					</Match>
+				</Switch>
+			</div>
 			<Switch>
 				<Match when={hasNotificationPermission()}>
-					You're subscribed to the notifications.
+					<p>You're subscribed to the notifications.</p>
 					<button
 						disabled={op().state === "pending"}
 						type="button"

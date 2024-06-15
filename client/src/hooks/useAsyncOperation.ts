@@ -34,6 +34,7 @@ export function useAsyncOperation<T>(
 
 	createEffect(() => {
 		const value = promise();
+		console.log("EFFECT", value);
 		if (value === undefined) {
 			setAsyncOpResult({
 				state: "unresolved",
@@ -42,6 +43,11 @@ export function useAsyncOperation<T>(
 			});
 			return;
 		}
+		setAsyncOpResult({
+			state: "pending",
+			data: undefined,
+			error: undefined,
+		});
 		value
 			.then((data) =>
 				setAsyncOpResult({ state: "resolved", data, error: undefined }),
