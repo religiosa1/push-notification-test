@@ -13,7 +13,7 @@ export function usePushSubscription() {
 				await sendSubscriptionToServer(subscription);
 			}
 			return { registration, subscription };
-		}),
+		})
 	);
 	return foo;
 }

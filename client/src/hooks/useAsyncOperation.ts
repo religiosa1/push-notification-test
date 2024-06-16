@@ -23,10 +23,10 @@ type AsyncOperationResult<T> =
 	  };
 
 export function useAsyncOperation<T>(
-	initialValue?: Promise<T>,
+	initialValue?: Promise<T>
 ): [Accessor<AsyncOperationResult<T>>, Setter<Promise<T> | undefined>] {
 	const [promise, setPromise] = createSignal<Promise<T> | undefined>(
-		initialValue,
+		initialValue
 	);
 	const [asyncOpResult, setAsyncOpResult] = createSignal<
 		AsyncOperationResult<T>
@@ -49,7 +49,7 @@ export function useAsyncOperation<T>(
 		});
 		value
 			.then((data) =>
-				setAsyncOpResult({ state: "resolved", data, error: undefined }),
+				setAsyncOpResult({ state: "resolved", data, error: undefined })
 			)
 			.catch((error) => {
 				console.error(error);

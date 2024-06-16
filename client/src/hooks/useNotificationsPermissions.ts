@@ -2,7 +2,7 @@ import { Accessor, createSignal, onCleanup } from "solid-js";
 
 export function useNotificationPermissions(): Accessor<boolean> {
 	const [hasPermission, setHasPermission] = createSignal(
-		window.Notification.permission === "granted",
+		window.Notification.permission === "granted"
 	);
 
 	const controller = new AbortController();
@@ -16,7 +16,7 @@ export function useNotificationPermissions(): Accessor<boolean> {
 			() => {
 				setHasPermission(perm.state === "granted");
 			},
-			{ signal: controller.signal },
+			{ signal: controller.signal }
 		);
 	});
 

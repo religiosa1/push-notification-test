@@ -70,7 +70,7 @@ export function SubUnsub(props: SubUnsubProps) {
 							setOp(async () => {
 								const sub = await subscribe(
 									props.registration,
-									props.subscription,
+									props.subscription
 								);
 								props.onSubscripionChange(sub);
 							})

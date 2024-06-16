@@ -12,7 +12,7 @@ export async function getVapidPublicKey(): Promise<Uint8Array> {
 }
 
 export async function sendSubscriptionToServer(
-	subscription: PushSubscription,
+	subscription: PushSubscription
 ): Promise<void> {
 	fetch(new URL("/register", baseUrl), {
 		method: "post",
@@ -24,7 +24,7 @@ export async function sendSubscriptionToServer(
 }
 
 export async function sendUnsubRequestToServer(
-	subscription: PushSubscription,
+	subscription: PushSubscription
 ): Promise<void> {
 	fetch(new URL("/unregister", baseUrl), {
 		method: "post",

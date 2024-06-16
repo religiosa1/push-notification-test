@@ -7,7 +7,7 @@ import { withTimeout } from "./utils/withTimeout";
 
 export const subscribe = (
 	registration: ServiceWorkerRegistration,
-	subscription: PushSubscription | null,
+	subscription: PushSubscription | null
 ) =>
 	withTimeout(async () => {
 		if (subscription == null) {
