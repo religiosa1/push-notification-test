@@ -22,23 +22,21 @@ self.addEventListener("push", function (event) {
 // https://developer.mozilla.org/en-US/docs/Web/API/Clients/openWindow#examples
 // Notification click event listener
 self.addEventListener("notificationclick", (e) => {
-	const TARGET_URL = "https://push-client.religiosa.ru/";
 	e.notification.close();
-	e.waitUntil(
-		// Get all the Window clients
-		clients.matchAll({ type: "window" }).then((clientsArr) => {
-			// If a Window tab matching the targeted URL already exists, focus that;
-			const hadWindowToFocus = clientsArr.some((windowClient) =>
-				windowClient.url === TARGET_URL // e.notification.data.url
-					? (windowClient.focus(), true)
-					: false
-			);
-			// Otherwise, open a new tab to the applicable URL and focus it.
-			if (!hadWindowToFocus) {
-				clients
-					.openWindow(TARGET_URL)
-					.then((windowClient) => (windowClient ? windowClient.focus() : null));
-			}
-		})
-	);
+	e.waitUntil(openAndFocusUrl("https://push-client.religiosa.ru/"));
 });
+
+async function openAndFocusUrl(url) {
+	const windowClients = await clients.matchAll({ type: "window" });
+	const windowTabToFocus = windowClients.find((client) => client.url === url);
+	if (windowTabToFocus) {
+		// If a Window tab matching the targeted URL already exists, focus that;
+		windowTabToFocus.focus();
+	} else {
+		// Otherwise, open a new tab to the applicable URL and focus it.
+		const client = await windowClients.openWindow(url);
+		if (client) {
+			client.focus();
+		}
+	}
+}
