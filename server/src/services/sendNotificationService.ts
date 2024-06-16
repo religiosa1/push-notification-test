@@ -1,6 +1,8 @@
+import { WebPushError } from "web-push";
 import {
   PushSubscriptionDbModel,
   getSubscriptions,
+  deleteSubscriptionById,
 } from "../repositories/subscriptions";
 import webPush from "./webPush";
 
@@ -19,11 +21,21 @@ export async function sendNotifications(
     subscriptions.map((sub) =>
       webPush
         .sendNotification(dbSubToWebPush(sub), payload, options)
-        .catch((err) => {
-          console.warn(
-            `error while sending the subscription id = ${sub.id}`,
-            err
-          );
+        .catch(async (err) => {
+          if (
+            err instanceof WebPushError &&
+            (err.statusCode === 410 || err.statusCode === 404)
+          ) {
+            console.log(
+              `Subscription id = ${sub.id} is GONE (${err.statusCode}), removing from DB`
+            );
+            await deleteSubscriptionById(sub.id);
+          } else {
+            console.warn(
+              `error while sending the subscription id = ${sub.id}`,
+              err
+            );
+          }
         })
     )
   );
