@@ -7,7 +7,7 @@ export function App() {
 	const [changedSub, setChangedSub] = createSignal<PushSubscription | null>();
 
 	const subscription = () =>
-		changedSub !== undefined ? changedSub() : subAndReg()?.subscription;
+		changedSub() !== undefined ? changedSub() : subAndReg()?.subscription;
 
 	return (
 		<Switch>
