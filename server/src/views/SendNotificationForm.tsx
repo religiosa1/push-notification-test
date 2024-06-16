@@ -4,8 +4,8 @@ import { Layout } from "./Layout";
 
 interface SendNotificationFormProps {
   form?: {
-    message?: string | undefined;
-    topic?: string | undefined;
+    title?: string | undefined;
+    body?: string | undefined;
   };
   result?: "success" | "error";
 }
@@ -19,15 +19,15 @@ export const SendNotificationForm: FC<SendNotificationFormProps> = (props) => {
       <form method="POST">
         <p>
           <label>
-            Topic
-            <input class={inputClass} name="topic" value={props.form?.topic} />
+            Title
+            <input class={inputClass} name="title" value={props.form?.title} />
           </label>
         </p>
         <p>
           <label>
-            Notification message
-            <textarea class={inputClass} name="message">
-              {props.form?.message}
+            Notification Body
+            <textarea class={inputClass} name="body">
+              {props.form?.body}
             </textarea>
           </label>
         </p>

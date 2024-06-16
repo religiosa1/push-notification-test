@@ -11,8 +11,8 @@ const router = new Hono();
 // router.use(csrf());
 
 const sendNotificationSchema = z.object({
-  message: z.string(),
-  topic: z.string(),
+  title: z.string(),
+  body: z.string(),
 });
 
 router.get("/", authenticate, (c) => c.render(<SendNotificationForm />));
@@ -23,9 +23,15 @@ router.post(
   async (c) => {
     const form = c.req.valid("form");
 
-    await sendNotifications(form.message, {
+    const payload = {
+      title: form.title,
+      body: form.body,
+    };
+    await sendNotifications(JSON.stringify(payload), {
       TTL: 1000 * 60 * 60 * 5,
-      topic: form.topic,
+      // This topic is used to coalesce notifications and has to be url safe.
+      // We don't need it at the moment.
+      // topic: encodeURIComponent(form.topic),
       urgency: "normal",
     });
 
