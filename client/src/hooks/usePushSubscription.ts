@@ -1,5 +1,4 @@
 import { Accessor, Resource, createResource, createSignal } from "solid-js";
-import { withTimeout } from "../utils/withTimeout";
 import { sendSubscriptionToServer } from "../api";
 
 type Stage = "initial" | "registration" | "subscription" | "register" | "done";
