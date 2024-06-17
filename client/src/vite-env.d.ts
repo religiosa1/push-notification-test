@@ -7,3 +7,10 @@ interface ImportMetaEnv {
 interface ImportMeta {
 	readonly env: ImportMetaEnv;
 }
+
+// Older safari-specific interfaces
+interface Window {
+	safari?: {
+		pushNotification?: PushManager;
+	};
+}

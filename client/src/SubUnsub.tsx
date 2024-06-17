@@ -68,10 +68,7 @@ export function SubUnsub(props: SubUnsubProps) {
 						type="button"
 						onClick={() =>
 							setOp(async () => {
-								const sub = await subscribe(
-									props.registration,
-									props.subscription
-								);
+								const sub = await subscribe(props.registration);
 								props.onSubscripionChange(sub);
 							})
 						}

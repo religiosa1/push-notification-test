@@ -5,12 +5,13 @@ export function useNotificationPermissions(): Accessor<boolean> {
 		window.Notification.permission === "granted"
 	);
 
-	const controller = new AbortController();
+	const controller = window.AbortController && new window.AbortController();
 	onCleanup(() => {
-		controller.abort();
+		controller?.abort();
 	});
 
-	navigator.permissions.query({ name: "notifications" }).then((perm) => {
+	// On older browsers permissions won't be reactive and will require a full page reload.
+	navigator.permissions?.query?.({ name: "notifications" }).then((perm) => {
 		perm.addEventListener(
 			"change",
 			() => {

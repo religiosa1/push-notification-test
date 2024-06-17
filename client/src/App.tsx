@@ -1,6 +1,7 @@
-import { Match, Show, Switch, createSignal } from "solid-js";
+import { ErrorBoundary, Suspense, createSignal } from "solid-js";
 import { usePushSubscription } from "./hooks/usePushSubscription";
 import { SubUnsub } from "./SubUnsub";
+import { ErrorDisplay } from "./ErrorDisplay";
 
 export function App() {
 	const [subAndReg, stage] = usePushSubscription();
@@ -10,29 +11,16 @@ export function App() {
 		changedSub() !== undefined ? changedSub() : subAndReg()?.subscription;
 
 	return (
-		<Switch>
-			<Match when={subAndReg.loading}>Loading {stage()}...</Match>
-			<Match when={subAndReg.error}>
-				Error while retrieving getting service worker registration.
-				<pre>{String(subAndReg.error)}</pre>
-				<Show when={subAndReg.error instanceof Error}>
-					<details>
-						<summary>Error details</summary>
-						<code>
-							<pre>{(subAndReg as { error: Error }).error.stack}</pre>
-						</code>
-					</details>
-				</Show>
-			</Match>
-			<Match when={subAndReg()}>
-				{(sr) => (
-					<SubUnsub
-						registration={sr().registration}
-						subscription={subscription() ?? null}
-						onSubscripionChange={setChangedSub}
-					/>
-				)}
-			</Match>
-		</Switch>
+		<ErrorBoundary
+			fallback={(error, reset) => <ErrorDisplay error={error} reset={reset} />}
+		>
+			<Suspense fallback={<span>Loading {stage()}...</span>}>
+				<SubUnsub
+					registration={subAndReg()?.registration!}
+					subscription={subscription() ?? null}
+					onSubscripionChange={setChangedSub}
+				/>
+			</Suspense>
+		</ErrorBoundary>
 	);
 }

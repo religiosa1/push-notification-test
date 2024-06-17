@@ -6,17 +6,14 @@ import {
 import { withTimeout } from "./utils/withTimeout";
 
 export const subscribe = (
-	registration: ServiceWorkerRegistration,
-	subscription: PushSubscription | null
-) =>
+	registration: ServiceWorkerRegistration
+): Promise<PushSubscription> =>
 	withTimeout(async () => {
-		if (subscription == null) {
-			const vapidPublicKey = await getVapidPublicKey();
-			subscription = await registration.pushManager.subscribe({
-				userVisibleOnly: true,
-				applicationServerKey: vapidPublicKey,
-			});
-		}
+		const vapidPublicKey = await getVapidPublicKey();
+		const subscription = await registration.pushManager.subscribe({
+			userVisibleOnly: true,
+			applicationServerKey: vapidPublicKey,
+		});
 
 		try {
 			await sendSubscriptionToServer(subscription);
@@ -27,7 +24,9 @@ export const subscribe = (
 		}
 	});
 
-export const unsubscribe = (subscription: PushSubscription | null) =>
+export const unsubscribe = (
+	subscription: PushSubscription | null
+): Promise<void> =>
 	withTimeout(async () => {
 		if (!subscription) {
 			return;
