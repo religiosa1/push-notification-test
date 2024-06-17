@@ -1,6 +1,7 @@
 import { Accessor, Resource, createResource, createSignal } from "solid-js";
 import { sendSubscriptionToServer } from "../api";
 import { withTimeout } from "../utils/withTimeout";
+import { getPushManager } from "../utils/getPushManager";
 
 type Stage = "initial" | "registration" | "subscription" | "register" | "done";
 
@@ -18,9 +19,7 @@ export function usePushSubscription(): UsePushSubscriptionReturn {
 			setStage("registration");
 			const registration = await navigator.serviceWorker.ready;
 			setStage("subscription");
-			const pushManager: PushManager =
-				// https://whatwebcando.today/push-notifications.html -- special interface for safari
-				window.safari?.pushNotification ?? registration.pushManager;
+			const pushManager = getPushManager(registration);
 			const subscription = await pushManager?.getSubscription();
 			setStage("register");
 			// If we have an active subscription, we're sending it to backend immediately,

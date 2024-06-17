@@ -3,6 +3,7 @@ import {
 	sendSubscriptionToServer,
 	sendUnsubRequestToServer,
 } from "./api";
+import { getPushManager } from "./utils/getPushManager";
 import { withTimeout } from "./utils/withTimeout";
 
 export const subscribe = (
@@ -10,7 +11,7 @@ export const subscribe = (
 ): Promise<PushSubscription> =>
 	withTimeout(async () => {
 		const vapidPublicKey = await getVapidPublicKey();
-		const subscription = await registration.pushManager.subscribe({
+		const subscription = await getPushManager(registration).subscribe({
 			userVisibleOnly: true,
 			applicationServerKey: vapidPublicKey,
 		});
