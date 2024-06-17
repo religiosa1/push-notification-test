@@ -9,6 +9,7 @@ export function usePushSubscription() {
 			const subscription = await registration.pushManager.getSubscription();
 			// If we have an active subscription, we're sending it to backend immediately,
 			// to update and sync data just in case.
+
 			if (subscription != null) {
 				await sendSubscriptionToServer(subscription);
 			}

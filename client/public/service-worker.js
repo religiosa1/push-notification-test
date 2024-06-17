@@ -27,6 +27,8 @@ self.addEventListener("notificationclick", function (event) {
 	// We can try to hijack Notification's tag property, if we need to dynamically
 	// determine what kind of URL do we want to show.
 	// https://developer.mozilla.org/en-US/docs/Web/API/Notification/tag
+	// As a side-effect, we will only have one notification for a url, because of
+	// the grouping/replacing functionality.
 	const url = event.notification.tag || "https://push-client.religiosa.ru/";
 	event.waitUntil(openAndFocusUrl(url));
 });
