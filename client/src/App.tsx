@@ -3,7 +3,7 @@ import { usePushSubscription } from "./hooks/usePushSubscription";
 import { SubUnsub } from "./SubUnsub";
 
 export function App() {
-	const subAndReg = usePushSubscription();
+	const [subAndReg, stage] = usePushSubscription();
 	const [changedSub, setChangedSub] = createSignal<PushSubscription | null>();
 
 	const subscription = () =>
@@ -11,7 +11,7 @@ export function App() {
 
 	return (
 		<Switch>
-			<Match when={subAndReg.loading}>Loading...</Match>
+			<Match when={subAndReg.loading}>Loading {stage()}...</Match>
 			<Match when={subAndReg.error}>
 				Error while retrieving getting service worker registration.
 				<pre>{String(subAndReg.error)}</pre>
