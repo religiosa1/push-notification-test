@@ -6,7 +6,10 @@ export function usePushSubscription() {
 	const [foo] = createResource(() =>
 		withTimeout(async () => {
 			const registration = await navigator.serviceWorker.ready;
-			const subscription = await registration.pushManager.getSubscription();
+			const pushManager: PushManager =
+				//@ts-expect-error safari-specific implementation
+				window.safari.pushNotification ?? registration.pushManager;
+			const subscription = await pushManager?.getSubscription();
 			// If we have an active subscription, we're sending it to backend immediately,
 			// to update and sync data just in case.
 
