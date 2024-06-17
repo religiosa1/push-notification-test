@@ -1,7 +1,7 @@
-import { Match, Show, Switch } from "solid-js";
+import { Match, Switch } from "solid-js";
 import { useAsyncOperation } from "./hooks/useAsyncOperation";
-import { useNotificationPermissions } from "./hooks/useNotificationsPermissions";
 import { subscribe, unsubscribe } from "./notifications";
+import { PermissionStatusDisplay } from "./PermissionsStatusDisplay";
 
 interface SubUnsubProps {
 	registration: ServiceWorkerRegistration;
@@ -10,30 +10,11 @@ interface SubUnsubProps {
 }
 export function SubUnsub(props: SubUnsubProps) {
 	const [op, setOp] = useAsyncOperation();
-	const hasNotificationPermission = useNotificationPermissions();
 
 	return (
 		<>
 			<div class="loader">
-				<Show
-					when={!hasNotificationPermission()}
-					fallback={"You gave this app permissions for notifications"}
-				>
-					This app doesn't have your permission for notification.
-					<Show when={props.subscription != null}>
-						<p>
-							Though you have an active notification subscription, you don't
-							have (most likely you revoked) the notification permissions, so
-							you won' recieve anything.
-						</p>
-						<button
-							onClick={() => Notification.requestPermission()}
-							type="button"
-						>
-							Click here to provide the permissions
-						</button>
-					</Show>
-				</Show>
+				<PermissionStatusDisplay subscription={props.subscription} />
 			</div>
 			<div class="loader">
 				<Switch>

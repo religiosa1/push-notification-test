@@ -1,8 +1,9 @@
 import { Accessor, createSignal, onCleanup } from "solid-js";
 
-export function useNotificationPermissions(): Accessor<boolean> {
-	const [hasPermission, setHasPermission] = createSignal(
-		window.Notification.permission === "granted"
+export function useNotificationPermissions(): Accessor<boolean | undefined> {
+	const [hasPermission, setHasPermission] = createSignal<boolean | undefined>(
+		// window.Notifiaction will be undefined in older browsers, specifically Safari
+		window.Notification && window.Notification.permission === "granted"
 	);
 
 	const controller = window.AbortController && new window.AbortController();
