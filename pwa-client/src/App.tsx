@@ -1,8 +1,8 @@
 import { createSignal, ErrorBoundary, Suspense } from "solid-js";
 import PWABadge from "./PWABadge.tsx";
-import { usePushSubscription } from "@client/hooks/usePushSubscription";
-import { SubUnsub } from "@client/SubUnsub";
-import { ErrorDisplay } from "@client/ErrorDisplay.tsx";
+import { usePushSubscription } from "./usePushSubscription";
+import { SubUnsub } from "./SubUnsub";
+import { ErrorDisplay } from "./ErrorDisplay";
 
 function App() {
   const [subAndReg, stage] = usePushSubscription();
