@@ -1,15 +1,41 @@
-import { ErrorBoundary } from "solid-js";
+import { createSignal, ErrorBoundary, Suspense } from "solid-js";
 import PWABadge from "./PWABadge.tsx";
-
-import { ErrorDisplay } from "./ErrorDisplay.tsx";
-import "./App.css";
+import { usePushSubscription } from "./usePushSubscription";
+import { SubUnsub } from "./SubUnsub";
+import { ErrorDisplay } from "./ErrorDisplay";
 
 function App() {
+  const [subAndReg, stage] = usePushSubscription();
+  const [changedSub, setChangedSub] = createSignal<PushSubscription | null>();
+
+  const subscription = () =>
+    changedSub() !== undefined ? changedSub() : subAndReg()?.subscription;
+
   return (
     <ErrorBoundary
       fallback={(error, reset) => <ErrorDisplay error={error} reset={reset} />}
     >
-      <p>Here comes our actual app</p>
+      <Suspense fallback={<span>Loading {stage()}...</span>}>
+        <dl>
+          <dt>stage</dt>
+          <dd>{stage()}</dd>
+
+          <dt>reg?</dt>
+          <dd>{subAndReg()?.registration ? "TRUE" : "FALSE"}</dd>
+
+          <dt>ACTIVE?</dt>
+          <dd>{subAndReg()?.registration?.active ? "TRUE" : "FALSE"}</dd>
+
+          <dt>sub</dt>
+          <dd>{subAndReg()?.subscription?.endpoint ?? "NONE"}</dd>
+        </dl>
+
+        <SubUnsub
+          registration={subAndReg()?.registration!}
+          subscription={subscription() ?? null}
+          onSubscripionChange={setChangedSub}
+        />
+      </Suspense>
       <PWABadge />
     </ErrorBoundary>
   );
