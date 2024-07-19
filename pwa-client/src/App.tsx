@@ -15,11 +15,20 @@ function App() {
     <ErrorBoundary
       fallback={(error, reset) => <ErrorDisplay error={error} reset={reset} />}
     >
-      {JSON.stringify({
-        stage,
-        reg: subAndReg()?.registration != null,
-        sub: subAndReg()?.subscription,
-      })}
+      <dl>
+        <dt>stage</dt>
+        <dd>{stage()}</dd>
+
+        <dt>reg?</dt>
+        <dd>{subAndReg()?.registration ? "TRUE" : "FALSE"}</dd>
+
+        <dt>ACTIVE?</dt>
+        <dd>{subAndReg()?.registration?.active ? "TRUE" : "FALSE"}</dd>
+
+        <dt>sub</dt>
+        <dd>{subAndReg()?.subscription?.endpoint ?? "NONE"}</dd>
+      </dl>
+
       <Suspense fallback={<span>Loading {stage()}...</span>}>
         <SubUnsub
           registration={subAndReg()?.registration!}
