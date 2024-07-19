@@ -15,21 +15,21 @@ function App() {
     <ErrorBoundary
       fallback={(error, reset) => <ErrorDisplay error={error} reset={reset} />}
     >
-      <dl>
-        <dt>stage</dt>
-        <dd>{stage()}</dd>
-
-        <dt>reg?</dt>
-        <dd>{subAndReg()?.registration ? "TRUE" : "FALSE"}</dd>
-
-        <dt>ACTIVE?</dt>
-        <dd>{subAndReg()?.registration?.active ? "TRUE" : "FALSE"}</dd>
-
-        <dt>sub</dt>
-        <dd>{subAndReg()?.subscription?.endpoint ?? "NONE"}</dd>
-      </dl>
-
       <Suspense fallback={<span>Loading {stage()}...</span>}>
+        <dl>
+          <dt>stage</dt>
+          <dd>{stage()}</dd>
+
+          <dt>reg?</dt>
+          <dd>{subAndReg()?.registration ? "TRUE" : "FALSE"}</dd>
+
+          <dt>ACTIVE?</dt>
+          <dd>{subAndReg()?.registration?.active ? "TRUE" : "FALSE"}</dd>
+
+          <dt>sub</dt>
+          <dd>{subAndReg()?.subscription?.endpoint ?? "NONE"}</dd>
+        </dl>
+
         <SubUnsub
           registration={subAndReg()?.registration!}
           subscription={subscription() ?? null}
