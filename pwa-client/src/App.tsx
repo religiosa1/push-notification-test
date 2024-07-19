@@ -15,6 +15,11 @@ function App() {
     <ErrorBoundary
       fallback={(error, reset) => <ErrorDisplay error={error} reset={reset} />}
     >
+      {JSON.stringify({
+        stage,
+        reg: subAndReg()?.registration != null,
+        sub: subAndReg()?.subscription,
+      })}
       <Suspense fallback={<span>Loading {stage()}...</span>}>
         <SubUnsub
           registration={subAndReg()?.registration!}
