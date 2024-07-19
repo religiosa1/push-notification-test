@@ -1,6 +1,7 @@
 import { ErrorBoundary } from "solid-js";
 import PWABadge from "./PWABadge.tsx";
 
+import { ErrorDisplay } from "./ErrorDisplay.tsx";
 import "./App.css";
 
 function App() {
