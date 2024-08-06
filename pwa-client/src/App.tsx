@@ -1,6 +1,6 @@
 import { createSignal, ErrorBoundary, Suspense } from "solid-js";
 import PWABadge from "./PWABadge.tsx";
-import { usePushSubscription } from "./usePushSubscription";
+import { usePushSubscription } from "./hooks/usePushSubscription";
 import { SubUnsub } from "./SubUnsub";
 import { ErrorDisplay } from "./ErrorDisplay";
 
