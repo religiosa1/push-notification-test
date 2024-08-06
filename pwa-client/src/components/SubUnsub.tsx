@@ -14,7 +14,9 @@ export function SubUnsub() {
 
   const unsubscribeMutation = useMutation({
     mutationFn: unsubscribe,
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [usePushSubscription.key] });
+    },
   });
 
   const subscribeMutation = useMutation({
