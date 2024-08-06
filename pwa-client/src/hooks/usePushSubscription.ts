@@ -10,7 +10,7 @@ export function usePushSubscription(props: UsePushManagerProps) {
     queryKey: [PushSubscriptionQueryKey, props.pushManager],
     queryFn: async () => {
       if (!props.pushManager) {
-        return undefined;
+        return null;
       }
       const subscription = await props.pushManager.getSubscription();
       return subscription;
