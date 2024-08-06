@@ -3,11 +3,14 @@ import { subscribe, unsubscribe } from "../services/notifications";
 import { PermissionStatusDisplay } from "./PermissionsStatusDisplay";
 import { useSwRegistration } from "../hooks/useSwRegistration";
 import { usePushSubscription } from "../hooks/usePushSubscription";
+import { usePushManager } from "../hooks/usePushManager";
+import { isSafari } from "../utils/isSafari";
 
 export function SubUnsub() {
   const queryClient = useQueryClient();
   const registration = useSwRegistration();
-  const subscription = usePushSubscription({ registration: registration.data });
+  const pushManager = usePushManager({ registration: registration.data });
+  const subscription = usePushSubscription({ pushManager });
 
   const unsubscribeMutation = useMutation({
     mutationFn: unsubscribe,
@@ -23,6 +26,30 @@ export function SubUnsub() {
 
   const pending = unsubscribeMutation.isPending || subscribeMutation.isPending;
   const error = unsubscribeMutation.error || subscribeMutation.error;
+
+  if (registration.isFetched && !pushManager) {
+    return (
+      <>
+        <p>
+          Unable to obtain PushManager. Seems like your device doesn't support
+          push notifications.
+        </p>
+        {isSafari() && (
+          <>
+            <p>
+              On Apple devices, you need to install the application on your
+              desktop, to recieve push notifiactions. Here's how you can do it:
+            </p>
+            <ul>
+              <li>Tap the 'Share' button.</li>
+              <li>Select 'Add to Home Screen' from the popup.</li>
+              <li>Tap 'Add' in the top right corner.</li>
+            </ul>
+          </>
+        )}
+      </>
+    );
+  }
 
   return (
     <>

@@ -1,8 +1,9 @@
+import { Suspense } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { SubUnsub } from "./components/SubUnsub.tsx";
 import { ErrorDisplay } from "./components/ErrorDisplay.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
-import { Suspense } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 

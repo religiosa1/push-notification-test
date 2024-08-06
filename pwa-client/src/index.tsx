@@ -1,6 +1,7 @@
-import "@client/style.css";
 import App from "./App";
 import ReactDOM from "react-dom/client";
+
+import "./style.css";
 
 const rootElement = document.getElementById("root")!;
 
