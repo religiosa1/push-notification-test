@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vite";
-import solid from "vite-plugin-solid";
+import react from "@vitejs/plugin-react";
 
 console.log("import.meta.dirname", import.meta.dirname);
 
@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    solid(),
+    react(),
     VitePWA({
       strategies: "injectManifest",
       srcDir: "src",

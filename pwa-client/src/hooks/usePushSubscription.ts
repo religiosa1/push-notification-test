@@ -1,51 +1,32 @@
-import { Accessor, Resource, createResource, createSignal } from "solid-js";
-import { sendSubscriptionToServer } from "../api";
-import { withTimeout } from "../utils/withTimeout";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPushManager } from "../utils/getPushManager";
 
-type Stage = "initial" | "registration" | "subscription" | "register" | "done";
-
-type UsePushSubscriptionReturn = [
-  Resource<{
-    registration: ServiceWorkerRegistration;
-    subscription: PushSubscription | null;
-  }>,
-  Accessor<Stage>
-];
-export function usePushSubscription(): UsePushSubscriptionReturn {
-  const [stage, setStage] = createSignal<Stage>("initial");
-  const [resource] = createResource(() =>
-    withTimeout(async () => {
-      setStage("registration");
-      const registration = await navigator.serviceWorker.ready;
-      if (!registration) {
-        throw new Error(
-          "Unexpected empty service worker registration in the initial resource query"
-        );
+interface UsePushManagerProps {
+  registration: ServiceWorkerRegistration | undefined;
+}
+export function usePushSubscription(props: UsePushManagerProps) {
+  const registrationQuery = useSuspenseQuery({
+    queryKey: [usePushSubscription.key, props.registration],
+    queryFn: async () => {
+      if (!props.registration) {
+        return undefined;
       }
-      setStage("subscription");
-      const pushManager = getPushManager(registration);
+      const pushManager = getPushManager(props.registration);
       if (!pushManager) {
         throw new Error(
-          "Unexpected empty push manager in the initial resource query. Is push notifications supprted by the platform?"
+          "Unexpected empty push manager in the initial resource query."
         );
       }
       if (typeof pushManager.getSubscription !== "function") {
         throw new Error(
-          "No getSubscription function on the pushmanager instance"
+          "No getSubscription function on the pushmanager instance. "
         );
       }
-      const subscription = await registration?.pushManager.getSubscription();
-      setStage("register");
-      // If we have an active subscription, we're sending it to backend immediately,
-      // to update and sync data just in case.
+      const subscription = await pushManager.getSubscription();
+      return subscription;
+    },
+  });
 
-      if (subscription != null) {
-        await sendSubscriptionToServer(subscription);
-      }
-      setStage("done");
-      return { registration, subscription };
-    })
-  );
-  return [resource, stage];
+  return registrationQuery;
 }
+usePushSubscription.key = "pushSubscription" as const;

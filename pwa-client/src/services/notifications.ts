@@ -3,9 +3,10 @@ import {
   sendSubscriptionToServer,
   sendUnsubRequestToServer,
 } from "./api";
-import { getPushManager } from "./utils/getPushManager";
-import { withTimeout } from "./utils/withTimeout";
+import { getPushManager } from "../utils/getPushManager";
+import { withTimeout } from "../utils/withTimeout";
 
+/** Subscribe to notification on service worker registration object. */
 export const subscribe = (
   registration: ServiceWorkerRegistration
 ): Promise<PushSubscription> =>
@@ -42,7 +43,7 @@ export const subscribe = (
   });
 
 export const unsubscribe = (
-  subscription: PushSubscription | null
+  subscription: PushSubscription | null | undefined
 ): Promise<void> =>
   withTimeout(async () => {
     if (!subscription) {

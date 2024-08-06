@@ -5,5 +5,5 @@
 export function getPushManager(
   registration: ServiceWorkerRegistration
 ): PushManager {
-  return window.safari?.pushNotification ?? registration?.pushManager;
+  return window.safari?.pushNotification ?? registration.pushManager;
 }

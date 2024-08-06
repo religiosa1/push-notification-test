@@ -1,26 +1,24 @@
-import { Accessor, createSignal, onCleanup } from "solid-js";
+import { useEffect, useState } from "react";
 
-export function useNotificationPermissions(): Accessor<boolean | undefined> {
-	const [hasPermission, setHasPermission] = createSignal<boolean | undefined>(
-		// window.Notifiaction will be undefined in older browsers, specifically Safari
-		window.Notification && window.Notification.permission === "granted"
-	);
+/** Semi-effective way to check for the notification permissions. */
+export function useNotificationPermissions(): boolean | undefined {
+  const [hasPermission, setHasPermission] = useState<boolean | undefined>(
+    // window.Notifiaction will be undefined in older browsers, specifically Safari
+    () => window.Notification?.permission === "granted"
+  );
 
-	const controller = window.AbortController && new window.AbortController();
-	onCleanup(() => {
-		controller?.abort();
-	});
+  useEffect(() => {
+    const controller = new window.AbortController();
+    // On older browsers permissions won't be reactive and will require a full page reload.
+    navigator.permissions?.query?.({ name: "notifications" }).then((perm) => {
+      perm.addEventListener(
+        "change",
+        () => setHasPermission(perm.state === "granted"),
+        { signal: controller.signal }
+      );
+    });
+    return () => controller.abort();
+  }, []);
 
-	// On older browsers permissions won't be reactive and will require a full page reload.
-	navigator.permissions?.query?.({ name: "notifications" }).then((perm) => {
-		perm.addEventListener(
-			"change",
-			() => {
-				setHasPermission(perm.state === "granted");
-			},
-			{ signal: controller.signal }
-		);
-	});
-
-	return hasPermission;
+  return hasPermission;
 }
