@@ -30,6 +30,11 @@ export function usePushSubscription(): UsePushSubscriptionReturn {
           "Unexpected empty push manager in the initial resource query. Is push notifications supprted by the platform?"
         );
       }
+      if (typeof pushManager.getSubscription !== "function") {
+        throw new Error(
+          "No getSubscription function on the pushmanager instance"
+        );
+      }
       const subscription = await registration?.pushManager.getSubscription();
       setStage("register");
       // If we have an active subscription, we're sending it to backend immediately,

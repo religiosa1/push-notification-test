@@ -7,6 +7,13 @@ console.log("import.meta.dirname", import.meta.dirname);
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    minify: false,
+    terserOptions: {
+      compress: false,
+      mangle: false,
+    },
+  },
   plugins: [
     solid(),
     VitePWA({

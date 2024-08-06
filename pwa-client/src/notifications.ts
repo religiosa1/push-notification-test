@@ -18,6 +18,11 @@ export const subscribe = (
     if (!pushManager) {
       throw new Error("Unable to obtain pushManager");
     }
+    if (typeof pushManager.subscribe !== "function") {
+      throw new Error(
+        "subscribe is ont a function on the pushManager instance"
+      );
+    }
     const subscription = await pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: vapidPublicKey,
