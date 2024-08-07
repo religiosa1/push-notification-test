@@ -61,6 +61,14 @@ with the payload text.
 This is minimalistic implementation, unfortunately it will have problems working
 on IPhones.
 
+### PWA Client
+
+A more complicated version of the client, written as a react PWA. Having PWA
+installed is currently the only way to make push-notifications working on an
+IPhone device. It still won't work on a regular website, so we're showing a
+text, that it's not supported and for safari users some instructions on how
+can you install a PWA in your system.
+
 ### Application Server
 
 1. Exposes 2 endpoints for the client:
@@ -96,6 +104,7 @@ if necessary.
    blocked on some devices.
 4. As a safety measure, even if we have an active subsciption, we're still sending
    it to the appserver, to update it (in case there are some changes in some of the values).
+   But this isn't necessary, strictly speaking.
 5. On the appserver, we're storing subscriptions with a unque constraint on their
    endpoint (which is returned by the browser) and when we're recieving subscriptions
    from the client we're doing `on conflict update` to update it. In the real production
