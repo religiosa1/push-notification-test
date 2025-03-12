@@ -68,7 +68,7 @@ async function openAndFocusUrl(url: string) {
   const windowTabToFocus = windowClients.find((client) => client.url === url);
   if (windowTabToFocus) {
     // If a Window tab matching the targeted URL already exists, focus that;
-    windowTabToFocus.focus();
+    await windowTabToFocus.focus();
   } else {
     // Otherwise, open a new tab to the applicable URL and focus it.
     const client = await self.clients.openWindow(url);

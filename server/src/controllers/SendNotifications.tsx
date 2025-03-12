@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { csrf } from "hono/csrf";
 import z from "zod";
 import { zValidator } from "@hono/zod-validator";
 
