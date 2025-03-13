@@ -5,8 +5,8 @@ A simple test client and application server for push notification.
 An attempt to make an example from the
 [Serviceworker Cookbook](https://github.com/mdn/serviceworker-cookbook/tree/master/push-simple)
 with an actual backend, with data storage and CORS. Written as a part of
-on-going investigation of how to send push notification on the client's phone
-as a part of another project.
+investigation performed mid 2024-early 2025 on how to send push notification on
+the client's phone as a part of another project.
 
 Consists of two separate packages for the client and appserver, each of them is
 supposed to be deployed on a separate domain, and supplied with a reverse
@@ -35,7 +35,7 @@ In a nutshell, there are three separate parts:
        │                   │                    │
 ┌──────┴──────┐     push   │             ┌──────┴──────┐
 │             │◄───────────┘             │             │
-│   Client    │  sub()/unsub()/getKey()  │   Backend   │
+│   Client    │  sub()/unsub()/getKey()  │ App Server  │
 │             ├─────────────────────────►│             │
 └─────────────┘                          └─────────────┘
 ```
@@ -55,31 +55,53 @@ There was this whole debacle of Apple disabling PWAs in Europe for iOS 17.4
 in February 2024 but reversing this decision in March. This has to be considered
 as the future of PWA on iOS may be quite shaky.
 
+Overall documentation specific to safari can be found [here](https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers)
+
+### Communication with the PushServer
+
+Can be done, using existing libraries from the [web-push-libs](https://github.com/web-push-libs)
+repos collection on the github.
+
+[NodeJs](https://github.com/web-push-libs/web-push) what's used in this repo.
+[.NET](https://github.com/web-push-libs/web-push-csharp): though it's stated
+that it doesn't support safari, it works just fine with PWAs on iOS devices.
+
+### Vapid Key
+
+VAPID (Voluntary Application Server Identity) is a way for your app server
+to confirm its identity, while communicating with the PushServer. It consists
+of three parts: email, public key, and private key.
+
+You also need to provide public key to the client when requesting a new
+subscription, hence `getVapidPublicKey()` endpoint on the app server.
+
+VAPID generation is handled by your web-push library, but you need to supply
+all three of its parts (pub-priv key pair and email) to it.
+
+Please, notice, that email in VAPID should not contain human-readable name,
+because [of Safari](https://github.com/web-push-libs/webpush-java/issues/201#issuecomment-1443258546).
+I.e.`John Doe<john@example.com>` is bad, while just `john@example.com` is ok.
+If you use `<>` symbols in your email, you'll get `403 BadJwtToken` error on
+attempts to send a push notification.
+
+You can generate keys using various online tools, for example
+https://vapidkeys.com/ or https://www.attheminute.com/vapid-key-generator
+
 ## Packages in this repo
-
-### Client
-
-Client is a minimalistic web app, which registers a service worker and gets a
-push permission and push subscription and registers this subscription on the
-backend.
-
-ServiceWorker is waiting for the push event from the server (via Push Server
-supplied by the browser in the subscription), and just shows the notification
-with the payload text.
-
-This is minimalistic implementation, unfortunately it won't work on IPhones,
-because it's not a PWA.
 
 ### PWA Client
 
-A more complicated version of the client, written as a react PWA. Currently, the
+A minimalistic web app, written as a react PWA. Currently, the
 only way to enable push notifications on an iPhone is by installing a PWA.
-It still won't work on a regular website, so we're showing a text, that it's not
-supported and for safari users some instructions on how can you install a PWA
-in your system.
+It still won't work on a regular website in Safari, so we're showing a text,
+that it's not supported and for safari users some instructions on how can you
+install a PWA in your system.
 
 To turn a website with a service worker into a PWA the only thing that you need
 is a manifest -- if you're ok with it not working in offline mode.
+
+Documentation on what fields are available in manifest can be found
+[here](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest)
 
 Otherwise, you get into caching territory, which you can handle either manually,
 or using extensions like [workbox](https://developer.chrome.com/docs/workbox/).

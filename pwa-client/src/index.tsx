@@ -3,6 +3,14 @@ import ReactDOM from "react-dom/client";
 
 import "./style.css";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch((registrationError) => {
+      console.warn("SW registration failed: ", registrationError);
+    });
+  });
+}
+
 const rootElement = document.getElementById("root")!;
 
 for (;;) {

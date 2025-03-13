@@ -1,0 +1,22 @@
+{
+  "name": "Push Notifictions Test PWA",
+  "lang": "en",
+  "short_name": "Push-Test",
+  "description": "Test application for Push Notifications",
+  "display": "standalone",
+  "start_url": ".",
+  "icons": [
+    {
+      "src": "pwa-icon_192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "pwa-icon_512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

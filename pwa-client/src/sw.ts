@@ -1,34 +1,21 @@
 /// <reference lib="webworker" />
-import {
-  cleanupOutdatedCaches,
-  createHandlerBoundToURL,
-  precacheAndRoute,
-} from "workbox-precaching";
-import { clientsClaim } from "workbox-core";
-import { NavigationRoute, registerRoute } from "workbox-routing";
 
+// export empty type because of tsc --isolatedModules flag
+export type {};
 declare let self: ServiceWorkerGlobalScope;
 
-// self.__WB_MANIFEST is the default injection point
-precacheAndRoute(self.__WB_MANIFEST);
+//==============================================================================
+// PUSH Notifications
 
-// clean old assets
-cleanupOutdatedCaches();
-
-let allowlist: RegExp[] | undefined;
-// in dev mode, we disable precaching to avoid caching issues
-if (import.meta.env.DEV) allowlist = [/^\/$/];
-
-// to allow work offline
-registerRoute(
-  new NavigationRoute(createHandlerBoundToURL("index.html"), { allowlist })
-);
-
-self.skipWaiting();
-clientsClaim();
+interface IPushEventPayload {
+  title: string;
+  body: string;
+  urlTag: string;
+}
 
 self.addEventListener("push", function (event) {
-  const data = event.data?.json();
+  const data = event.data?.json() as IPushEventPayload;
+
   if (!data || typeof data !== "object") {
     console.log("no data");
   }
@@ -39,18 +26,19 @@ self.addEventListener("push", function (event) {
       : "No valid title";
   const body =
     typeof data.body === "string" && data.body ? data.body : "Empty body";
+
   const notificationPromise = self.registration.showNotification(title, {
-    body: body,
-    tag: "https://push-client.religiosa.ru/#someTestTag",
+    body,
+    tag: data.urlTag,
   });
+
   // Keep the service worker alive until the notification is created.
-  // https://developer.mozilla.org/en-US/docs/Web/API/ExtendableEvent/waitUntil
   event.waitUntil(notificationPromise);
 });
 
-// Notification click event listener
 self.addEventListener("notificationclick", function (event) {
   event.notification.close();
+
   // There's a e.notification.data.url, but it's not supported on safari/IOS
   // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification#browser_compatibility
   // We can try to hijack Notification's tag property, if we need to dynamically
@@ -58,7 +46,7 @@ self.addEventListener("notificationclick", function (event) {
   // https://developer.mozilla.org/en-US/docs/Web/API/Notification/tag
   // As a side-effect, we will only have one notification for a url, because of
   // the grouping/replacing functionality.
-  const url = event.notification.tag || "https://push-client.religiosa.ru/";
+  const url = event.notification.tag || "https://example.com";
   event.waitUntil(openAndFocusUrl(url));
 });
 
@@ -67,10 +55,8 @@ async function openAndFocusUrl(url: string) {
   const windowClients = await self.clients.matchAll({ type: "window" });
   const windowTabToFocus = windowClients.find((client) => client.url === url);
   if (windowTabToFocus) {
-    // If a Window tab matching the targeted URL already exists, focus that;
     await windowTabToFocus.focus();
   } else {
-    // Otherwise, open a new tab to the applicable URL and focus it.
     const client = await self.clients.openWindow(url);
     if (client) {
       client.focus().catch((err) => {

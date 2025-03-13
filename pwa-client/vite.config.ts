@@ -1,9 +1,5 @@
-import { resolve } from "node:path";
-import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-
-console.log("import.meta.dirname", import.meta.dirname);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,43 +9,19 @@ export default defineConfig({
       compress: false,
       mangle: false,
     },
-  },
-  plugins: [
-    react(),
-    VitePWA({
-      strategies: "injectManifest",
-      srcDir: "src",
-      filename: "sw.ts",
-      registerType: "autoUpdate",
-      injectRegister: "inline",
-
-      pwaAssets: {
-        disabled: false,
-        config: true,
+    // Setting up a separate entrypoint for the service-worker and ensuring
+    // a static output name for it (so it can be registered)
+    rollupOptions: {
+      input: {
+        main: "index.html",
+        sw: "sw.ts",
       },
-
-      manifest: {
-        name: "client2",
-        short_name: "client2",
-        description: "Test client for notifications",
-        theme_color: "#ffffff",
+      output: {
+        entryFileNames: (chunk) => {
+          return chunk.name === "sw" ? "sw.js" : "[name].[hash].js";
+        },
       },
-
-      injectManifest: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
-      },
-
-      devOptions: {
-        enabled: false,
-        navigateFallback: "index.html",
-        suppressWarnings: true,
-        type: "module",
-      },
-    }),
-  ],
-  resolve: {
-    alias: {
-      "@client": resolve(import.meta.dirname, "../client/src"),
     },
   },
+  plugins: [react()],
 });
